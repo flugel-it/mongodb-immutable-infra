@@ -1,0 +1,29 @@
+---
+
+- name: Configuring database directory
+  file:
+    state: directory
+    path: "{{ mongodb_conf_dbpath }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_user }}"
+    mode: "0755"
+
+- name: Configuring log
+  file:
+    state: touch
+    path: "{{ mongodb_conf_logpath }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_user }}"
+    mode: "0644"
+
+- name: Configuring mongodb
+  template:
+    src: "{{ item }}.j2"
+    dest: "/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart mongodb
+  with_items:
+    - etc/logrotate.d/mongodb
+    - etc/mongod.conf

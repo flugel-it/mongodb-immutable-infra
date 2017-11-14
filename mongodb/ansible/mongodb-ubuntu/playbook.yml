@@ -1,0 +1,14 @@
+---
+
+- name: Mongodb for ubuntu
+  hosts: all
+  remote_user: ubuntu
+  gather_facts: true
+  become_user: root
+  become: true
+  pre_tasks:
+    - shell: sudo apt update && sudo apt -y install python
+  roles:
+    - mongodb
+  vars:
+    mongodb_conf_bind_ip: 0.0.0.0
