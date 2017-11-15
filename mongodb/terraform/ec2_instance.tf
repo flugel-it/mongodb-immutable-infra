@@ -19,7 +19,6 @@ resource "aws_instance" "aws-instance" {
     tags = "${map(
         "Name", "${var.cluster_name}-${count.index}.${var.dns_domain}",
         "Internal", "${var.cluster_name}-${count.index}.internal.${var.dns_domain}",
-        "cluster", "${var.cluster_name}",
-        var.consul_join_tag_key, var.consul_join_tag_value
+        "cluster", "${var.cluster_name}"
     )}"
 }

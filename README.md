@@ -1,4 +1,4 @@
-# Cluster automation
+# mongodb-immutable-infra
 
 Each folder has a README.md with the instructions about what you need to do.
 

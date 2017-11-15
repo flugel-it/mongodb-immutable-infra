@@ -16,11 +16,4 @@ variable "vol_size" {}
 variable "customer" {
     description = "Customer name (one word)"
 }
-variable "consul_join_tag_key" {
-  description = "The key of the tag to auto-jon on EC2."
-}
-
-variable "consul_join_tag_value" {
-  description = "The value of the tag to auto-join on EC2."
-}
 variable "namespace" {}
