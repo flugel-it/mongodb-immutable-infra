@@ -10,3 +10,9 @@
 - include: mongodb.yml
   when: mongodb_enabled
   tags: [mongodb]
+
+- shell: ls -1 /var/lib/mongo/
+  register: contents
+
+- file: path=/var/lib/mongo/{{ item }} state=absent
+  with_items: "{{ contents.stdout_lines }}"

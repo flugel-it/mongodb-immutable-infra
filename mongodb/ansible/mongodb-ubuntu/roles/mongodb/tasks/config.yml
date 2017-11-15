@@ -23,7 +23,6 @@
     owner: root
     group: root
     mode: "0644"
-  notify: restart mongodb
   with_items:
     - etc/logrotate.d/mongodb
     - etc/mongod.conf
