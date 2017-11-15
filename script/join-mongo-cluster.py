@@ -24,7 +24,9 @@ class Crawler:
         ec2 = boto3.client('ec2', region_name=self.get_region())
         instances = ec2.describe_instances( Filters = [
             {'Name': 'tag:cluster',
-            'Values': [cluster_name]}
+            'Values': [cluster_name]},
+            {'Name': 'instance-state-name',
+            'Values': ['running']}
             ])
         return instances
 
@@ -43,7 +45,7 @@ class Config:
         rconf = """
 replication:
     replSetName: {0}
-    """.format(cluster_name)
+""".format(cluster_name)
         cont = self.get_conf()
         with open(self.conffile, "w") as mconf:
             if not rconf in cont:
@@ -70,22 +72,11 @@ class MongoConf:
             lmembers.append(d)
 
         diconfig.update({'members' : lmembers})
-
         return diconfig
+
 
     def initiate_rs(self, config):
         self.client.admin.command("replSetInitiate", config)
-
-
-def remove_data(dir_path):
-
-    for file_object in os.listdir(dir_path):
-        file_object_path = os.path.join(dir_path, file_object)
-        if os.path.isfile(file_object_path):
-            os.unlink(file_object_path)
-        else:
-            shutil.rmtree(file_object_path)
-
 
 def runcmd(cmd):
     proc = subprocess.Popen(cmd, shell=True,
@@ -107,19 +98,14 @@ if __name__ == "__main__":
     conf = Config()
     conf.write_conf(cluster_name)
 
+    cmd = "systemctl enable mongod"
+    runcmd(cmd)
     cmd = "systemctl restart mongod"
     runcmd(cmd)
 
     # get only the hostname part, not fqdn
     # e.g: 'cluster_name-index'
     hostname = platform.node().split('.')[0]
-
-    # Remove old mongo data
-    cmd = "systemctl stop mongod"
-    runcmd(cmd)
-    remove_data('/var/lib/mongo')
-    cmd = "systemctl start mongod"
-    runcmd(cmd)
 
     if hostname == cluster_name + "-0":
 
@@ -134,7 +120,7 @@ if __name__ == "__main__":
         for r in range(len(reservations)):
             tags = reservations[r]["Instances"][0]["Tags"]
             for t in range(len(tags)):
-                if tags[t]["Key"] == "Name":
+                if tags[t]["Key"] == "Internal":
                     listinst.append(tags[t]["Value"])
 
         # Initiate Replica Set
