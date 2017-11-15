@@ -7,7 +7,7 @@ You should export a bunch of env. variables before start terraform code.
 ```
 export TF_VAR_customer="flugel"
 export TF_VAR_project_name="mongodb-cluster"
-export TF_VAR_tf_region="us-east-2"
+export TF_VAR_tf_region="us-west-2"
 export TF_VAR_aws_region="us-west-2"
 export TF_VAR_namespace="Cluster_Automation"
 ```
