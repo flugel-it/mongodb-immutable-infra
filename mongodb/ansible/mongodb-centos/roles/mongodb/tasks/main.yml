@@ -12,7 +12,9 @@
   tags: [mongodb]
 
 - shell: ls -1 /var/lib/mongo/
+  ignore_errors: yes
   register: contents
 
 - file: path=/var/lib/mongo/{{ item }} state=absent
+  ignore_errors: yes
   with_items: "{{ contents.stdout_lines }}"
