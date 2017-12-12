@@ -1,0 +1,48 @@
+---
+
+# Mongodb version
+mongodb_version: 3.4
+# APT key id
+mongodb_apt_key_id: 0C49F3730359A14518585931BC711F9BA15703C6
+# APT key server
+mongodb_apt_key_server: keyserver.ubuntu.com
+# APT repository
+mongodb_apt_repository: "deb http://repo.mongodb.org/apt/{{ ansible_distribution|lower }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} {{ 'main' if ansible_distribution == 'debian' else 'multiverse' }}"
+# User
+mongodb_user: mongodb
+# Package
+mongodb_package: mongodb-org
+
+# Run with security
+mongodb_conf_auth: no
+# Directory for datafiles
+mongodb_conf_dbpath: /var/lib/mongodb
+# Log file to send write to instead of stdout
+mongodb_conf_logpath: /var/log/mongodb/mongod.log
+# Specify port number
+mongodb_conf_port: 27017
+# Comma separated list of ip addresses to listen on
+mongodb_conf_bind_ip: 0.0.0.0
+# Enable journaling
+mongodb_conf_journal: no
+# Append to logpath instead of over-writing
+mongodb_conf_logappend: yes
+# Limits each database to a certain number of files
+mongodb_conf_quota: no
+# Disable scripting engine
+mongodb_conf_noscripting: no
+# Do not allow table scans
+mongodb_conf_notablescan: no
+# Periodically show cpu and iowait utilization
+mongodb_conf_cpu: no
+# Enable http interface
+mongodb_conf_httpinterface: no
+# Inspect all client data for validity on receipt
+mongodb_conf_objcheck: no
+# Disable data file preallocation.
+mongodb_conf_noprealloc: no
+
+# start on boot
+mongodb_service_enabled: no
+# current state: started, stopped
+mongodb_service_state: stopped

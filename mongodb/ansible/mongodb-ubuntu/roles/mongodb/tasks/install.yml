@@ -1,0 +1,16 @@
+---
+
+- name: Adding APT key
+  apt_key:
+    id: "{{ mongodb_apt_key_id }}"
+    keyserver: "{{ mongodb_apt_key_server }}"
+
+- name: Add APT repository
+  apt_repository:
+    repo: "{{ mongodb_apt_repository }}"
+    update_cache: yes
+
+- name: Installing package
+  apt:
+    pkg: "{{ mongodb_package }}"
+    state: present

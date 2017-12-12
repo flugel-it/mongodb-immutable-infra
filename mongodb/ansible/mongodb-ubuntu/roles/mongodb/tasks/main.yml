@@ -1,0 +1,28 @@
+---
+
+- import_tasks: install.yml
+  tags:
+    - database:nosql
+    - mongodb
+    - install
+    - mongodb-install
+
+- import_tasks: config.yml
+  tags:
+    - database:nosql
+    - mongodb
+    - config
+    - mongodb-config
+
+- import_tasks: service.yml
+  tags:
+    - database:nosql
+    - mongodb
+    - service
+    - mongodb-service
+
+- shell: ls -1 /var/lib/mongo
+  register: contents
+
+- file: path=/var/lib/mongo/{{ item }} state=absent
+  with_items: "{{ contents.stdout_lines }}"

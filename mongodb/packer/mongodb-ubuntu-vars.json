@@ -1,0 +1,4 @@
+{
+    "region": "us-west-2",
+    "ami_name": "mongodb-ubuntu"
+}

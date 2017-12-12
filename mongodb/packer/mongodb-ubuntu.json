@@ -1,0 +1,59 @@
+{
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+    },
+    "builders": [
+        {
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "ami_name": "{{user `ami_name`}}-{{timestamp}}",
+            "instance_type": "t2.micro",
+            "region": "{{user `region`}}",
+            "source_ami_filter": {
+              "filters": {
+              "virtualization-type": "hvm",
+              "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+              "root-device-type": "ebs"
+              },
+              "owners": ["099720109477"],
+              "most_recent": true
+            },
+            "ssh_username": "ubuntu",
+            "type": "amazon-ebs"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline":
+            [
+                "sleep 30",
+                "sudo apt update",
+                "sudo apt -y upgrade",
+                "sudo apt install -y build-essential python-dev python python-software-properties python-pip",
+                "sudo pip install --upgrade pip",
+                "sudo pip install boto3 requests pymongo"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "../../script/join-mongo-cluster.py",
+            "destination": "/tmp/join-mongo-cluster.py"
+        },
+        {
+            "type": "shell",
+            "inline":
+            [
+                "sudo cp /tmp/join-mongo-cluster.py /usr/local/sbin/join-mongo-cluster.py",
+                "sudo chown root:root /usr/local/sbin/join-mongo-cluster.py",
+                "sudo chmod +x /usr/local/sbin/join-mongo-cluster.py"
+            ]
+        },
+        {
+            "type": "ansible",
+            "playbook_file": "../ansible/mongodb-ubuntu/playbook.yml",
+            "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False" ]
+        }
+    ]
+}

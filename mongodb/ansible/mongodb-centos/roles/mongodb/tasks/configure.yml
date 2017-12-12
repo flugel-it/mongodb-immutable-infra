@@ -1,0 +1,25 @@
+---
+
+- name: Configure mongodb
+  template: src=mongod.conf.j2 dest=/etc/{{mongodb_config['config_file']}} owner=root group=root mode=0644
+
+- name: Configure log rotation
+  template: src=logrotate.conf.j2 dest=/etc/logrotate.d/mongodb.conf
+  when: mongodb_logrotate
+
+- name: Configure database directory
+  file: state=directory path={{ mongodb_conf_dbpath }} owner=mongod group=mongod mode=0755
+
+- name: Configure log directory
+  file: state=directory path={{ mongodb_conf_logpath | dirname }} owner=mongod group=mongod mode=0755
+
+- name: Ensure mongodb is stopped
+  systemd:
+    name: "{{ mongodb_daemon_name }}"
+    state: stopped
+
+- name: Ensure mongodb service is disabled
+  systemd:
+    name: "{{ mongodb_daemon_name }}"
+    enabled: no
+    #use: service

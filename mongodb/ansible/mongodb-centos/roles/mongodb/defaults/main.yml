@@ -1,0 +1,33 @@
+---
+
+mongodb_enabled: yes
+mongodb_install: yes
+
+mongodb_packages:
+  - mongodb-org
+
+mongodb_logdir: /var/log/mongodb
+
+# Config options
+mongodb_conf_auth: no                             # Run with security
+mongodb_conf_bind_ip: 0.0.0.0                   # Comma separated list of ip addresses to listen on
+mongodb_conf_port: 27017
+mongodb_conf_cpu: yes                             # Periodically show cpu and iowait utilization
+mongodb_conf_dbpath: /var/lib/mongo               # Directory for datafiles
+
+# Service setup options
+mongodb_config:                          # Custom configuration for major/minor version variants
+  daemon: mongod
+  config_file: mongod.conf
+
+mongodb_conf_logpath: "{{mongodb_logdir}}/mongo.log"  # Log file to send write to instead of stdout
+
+# Log rotation
+mongodb_logrotate: yes                             # Rotate mongodb logs.
+mongodb_logrotate_options:
+  - compress
+  - copytruncate
+  - daily
+  - dateext
+  - rotate 7
+  - size 10M

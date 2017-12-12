@@ -1,0 +1,18 @@
+---
+# This role deploys the mongodb processes and sets up settings.
+
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: mongodb.yml
+  when: mongodb_enabled
+  tags: [mongodb]
+
+- shell: ls -1 /var/lib/mongo/
+  register: contents
+
+- file: path=/var/lib/mongo/{{ item }} state=absent
+  with_items: "{{ contents.stdout_lines }}"

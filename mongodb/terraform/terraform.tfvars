@@ -1,0 +1,8 @@
+instance_type = "t2.micro"
+instance_count = "3"
+dns_domain = "flugel-it.com"
+vol_size = "10"
+image_owner = "YOUR_OWNER_ID"
+os_env = "centos"
+cluster_name = "mongocluster"
+key_name = "YOUR_KEY"
