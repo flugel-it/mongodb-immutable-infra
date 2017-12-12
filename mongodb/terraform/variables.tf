@@ -1,6 +1,5 @@
 variable "instance_type" {}
 variable "instance_count" {}
-variable "image_owner" {}
 variable "os_env" {
     description = "OS environment"
 }

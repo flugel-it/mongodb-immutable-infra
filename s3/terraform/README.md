@@ -10,7 +10,7 @@ export TF_VAR_aws_region="us-west-2"
 ```
 
 > - **TF_VAR_customer**: The customer/client name
-> - **TF_VAR_aws_region**: AWS region where the new vpc will be created
+> - **TF_VAR_aws_region**: AWS region where the bucket will be created
 
 Once these variables exported, you can init terraform:
 
