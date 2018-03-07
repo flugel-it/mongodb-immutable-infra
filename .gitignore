@@ -1,7 +1,14 @@
 terraform.tfplan
 terraform.tfstate
-./*.tfstate
+*.tfstate
 .terraform/
 *.backup
-playbook.retry
-./*.retry
+*.retry
+.idea/
+.env
+venv/
+hosts.yml
+hosts.yaml
+hosts.ini
+
+test_config_local.py

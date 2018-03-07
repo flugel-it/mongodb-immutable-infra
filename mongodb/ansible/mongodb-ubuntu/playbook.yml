@@ -7,8 +7,13 @@
   become_user: root
   become: true
   pre_tasks:
-    - shell: sudo apt update && sudo apt -y install python
+    - name: Update and install python
+      apt: 
+        name: python
+        update_cache: yes
+        state: latest
   roles:
     - mongodb
   vars:
     mongodb_conf_bind_ip: 0.0.0.0
+    mongodb_conf_port: 8090

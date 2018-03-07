@@ -45,4 +45,4 @@ mongodb_conf_noprealloc: no
 # start on boot
 mongodb_service_enabled: no
 # current state: started, stopped
-mongodb_service_state: stopped
+mongodb_service_state: restarted
