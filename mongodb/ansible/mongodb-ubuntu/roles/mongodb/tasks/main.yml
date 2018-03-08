@@ -22,7 +22,9 @@
     - mongodb-service
 
 - shell: ls -1 /var/lib/mongo
+  ignore_errors: yes
   register: contents
 
 - file: path=/var/lib/mongo/{{ item }} state=absent
   with_items: "{{ contents.stdout_lines }}"
+  ignore_errors: yes
