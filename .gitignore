@@ -11,4 +11,5 @@ hosts.yml
 hosts.yaml
 hosts.ini
 
+*.pyc
 test_config_local.py
