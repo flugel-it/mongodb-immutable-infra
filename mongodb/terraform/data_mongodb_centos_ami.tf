@@ -11,5 +11,5 @@ data "aws_ami" "mongodb-centos" {
         values = ["hvm"]
     }
 
-    owners = ["${var.image_owner}"] 
+    owners = ["${data.aws_caller_identity.current.account_id}"] 
 }
