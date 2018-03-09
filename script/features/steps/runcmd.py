@@ -10,7 +10,7 @@ def get_command(step_instance, command):
 
 @step("executed the command")
 def execute_command(step_instance):
-	world.command_output = utils.run_cmd(world.command)
+	world.command_output, _ = utils.run_cmd(world.command)
 
 
 @step('received output "(.*)"')

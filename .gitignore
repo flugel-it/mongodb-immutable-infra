@@ -1,8 +1,6 @@
 terraform.tfplan
-terraform.tfstate
-*.tfstate
+*.tfstate*
 .terraform/
-*.backup
 *.retry
 .idea/
 .env

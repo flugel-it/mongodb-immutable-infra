@@ -7,6 +7,6 @@ resource "aws_s3_bucket" "s3-terraform-state" {
     }
 
     lifecycle {
-        prevent_destroy = true
+        //        prevent_destroy = true
     }
 }
