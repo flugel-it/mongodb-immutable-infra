@@ -1,7 +1,5 @@
 data "aws_vpc" "consul" {
-
-    tags {
-        Name = "${var.namespace}"
-    }
-
+  tags {
+    Name = "${var.namespace}"
+  }
 }

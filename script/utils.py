@@ -4,6 +4,8 @@ import subprocess
 import boto3
 from botocore.exceptions import ClientError
 
+from test_config import TERRAFORM_DIR
+
 
 def run_cmd(cmd, env=None):
 	"""
@@ -30,11 +32,12 @@ def run_cmd(cmd, env=None):
 
 class TFRunner(object):
 	"""
-	Terraform runner
+	Terraform s3_runner
 	"""
 	
 	def __init__(self, config_dir=".", variables=None):
 		"""
+		Creates a terraform wrapper
 		:type config_dir: str
 		:param config_dir:
 		:type variables: dict
@@ -56,7 +59,6 @@ class TFRunner(object):
 		env = os.environ
 		if self.variables is not None:
 			env.update({"TF_VAR_" + key: value for key, value in self.variables.items()})
-		
 		working_dir = os.getcwd()
 		os.chdir(self.config_dir)
 		
@@ -65,13 +67,23 @@ class TFRunner(object):
 		os.chdir(working_dir)
 		return out, err
 	
-	def init(self):
+	def init(self, backend_config=None):
 		"""
-		
+		:type backend_config: dict
+		:param backend_config: configuration of terraform backend
 		:return:
 		"""
+		
 		command_template = "terraform init{}"
-		command = command_template.format("")
+		conf = ""
+		if backend_config and type(backend_config) is dict:
+			conf = " " + " ".join(
+				map(
+					lambda key: '-backend-config="{}={}"'.format(key, backend_config[key]),
+					backend_config
+				)
+			)
+		command = command_template.format(conf)
 		return self.__run_command(command)
 	
 	def plan(self):
@@ -129,24 +141,55 @@ def check_if_bucket_exists(bucket_name, cfg=None):
 			result = False
 	return result
 
-# if __name__ == '__main__':
-# 	tf_s3_config = {
-# 		"customer": "flugel-test",
-# 		"terraform_bucket_name": "terraform-state",
-# 		"aws_region": "us-west-2",
-# 	}
-# 	runner = TFRunner("../s3/terraform/", tf_s3_config)
-# 	print "Planning"
-# 	runner.plan()
-#
-# 	print "Applying"
-# 	runner.apply()
-#
-# 	print "Destroying"
-# 	runner.destroy()
-#
-# 	bucket_name = "{}-{}".format(tf_s3_config['customer'], tf_s3_config['terraform_bucket_name'])
-# 	config = {
-# 		"aws_region": tf_s3_config["aws_region"]
-# 	}
-# 	print check_if_bucket_exists(bucket_name, config)
+
+if __name__ == '__main__':
+	tf_s3_config = {
+		"customer": "flugel-test",
+		"terraform_bucket_name": "terraform-state",
+		"aws_region": "us-west-2",
+	}
+	s3_runner = TFRunner(TERRAFORM_DIR["S3"], tf_s3_config)
+	
+	# 	# print("Planning S3")
+	# 	# s3_runner.plan()
+	#
+	# 	# print("Applying S3")
+	# 	# s3_runner.apply()
+	#
+	tf_aws_config = {
+		"customer": tf_s3_config["customer"],
+		"aws_region": "eu-west-1",
+		"project_name": "aws-vpc",
+		"tf_region": tf_s3_config["aws_region"],
+		"namespace": "cluster_automation_test",
+		"public_key_path": "~/.ssh/id_rsa.pub"
+	}
+	tf_aws_init_config = {
+		"bucket": "{}-{}".format(tf_aws_config['customer'], tf_s3_config['terraform_bucket_name']),
+		"key": "{}/terraform.tfstate".format(tf_aws_config["project_name"]),
+		"region": tf_aws_config["tf_region"],
+	}
+	# 	aws_runner = TFRunner(AWS_TERRAFORM_DIR, tf_aws_config)
+	#
+	# 	print("Initializing AWS")
+	# 	out, err = aws_runner.init(tf_aws_init_config)
+	#
+	# 	print("Planning AWS")
+	# 	aws_runner.plan()
+	#
+	# 	print("Applying AWS")
+	# 	aws_runner.apply()
+	#
+	# 	# bucket_name = "{}-{}".format(tf_s3_config['customer'], tf_s3_config['terraform_bucket_name'])
+	# 	# config = {
+	# 	# 	"aws_region": tf_s3_config["aws_region"]
+	# 	# }
+	# 	# print check_if_bucket_exists(bucket_name, config)
+	#
+	# 	print("Destroying AWS")
+	# 	aws_runner.destroy()
+	#
+	print("Destroying S3")
+	s3_runner.destroy()
+	
+	print("Finished")

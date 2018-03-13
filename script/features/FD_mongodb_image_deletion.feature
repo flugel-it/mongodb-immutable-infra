@@ -4,7 +4,7 @@ Feature: Delete MongoDB image
 	@mongodb_tf
 	@mongodb_image_tf
 	Scenario: Delete Ubuntu image
-	# Enter steps here
+ # Enter steps here
 
 	@mongodb_tf
 	@mongodb_image_tf

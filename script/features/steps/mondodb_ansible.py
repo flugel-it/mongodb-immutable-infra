@@ -35,7 +35,6 @@ def step_impl(step_instance):
 		ANSIBLE_HOSTS_FILE,
 		ANSIBLE_PLAYBOOK_FILE
 	))
-	
 
 
 @step("MongoDB is available at port (\d+)")

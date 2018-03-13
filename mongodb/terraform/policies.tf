@@ -17,8 +17,12 @@ resource "aws_iam_policy" "cluster-join" {
 
 # Attach the policy
 resource "aws_iam_policy_attachment" "cluster-join" {
-  name       = "${var.namespace}-cluster-join"
-  roles      = ["${aws_iam_role.cluster-join.name}"]
+  name = "${var.namespace}-cluster-join"
+
+  roles = [
+    "${aws_iam_role.cluster-join.name}",
+  ]
+
   policy_arn = "${aws_iam_policy.cluster-join.arn}"
 }
 

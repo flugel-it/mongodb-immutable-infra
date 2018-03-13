@@ -18,8 +18,13 @@ export TF_VAR_namespace="Cluster_Automation"
 > - **TF_VAR_aws_region**: AWS region where the new vpc will be created
 > - **TF_VAR_namespace**: Namespace of the project
 
-Once these variables exported, you can init terraform:
+**NOTE**: You must to generate a public key of the AWS key and inform the path in terraform.tfvars file. To generate the public key:
 
+```
+ssh-keygen -y -f private_key.pem > public_key.pub
+```
+
+Once these variables exported, you can init terraform:
 
 ```
 terraform init \
@@ -39,10 +44,4 @@ And apply the changes:
 
 ```
 terraform apply
-```
-
-**NOTE**: You must to generate a public key of the AWS key and inform the path in terraform.tfvars file. To generate the public key:
-
-```
-ssh-keygen -y -f private_key.pem > public_key.pub
 ```

@@ -1,15 +1,23 @@
 data "aws_ami" "mongodb-centos" {
-    most_recent = true
+  most_recent = true
 
-    filter {
-        name   = "name"
-        values = ["mongodb-centos-*"]
-    }
+  filter {
+    name = "name"
 
-    filter {
-        name   = "virtualization-type"
-        values = ["hvm"]
-    }
+    values = [
+      "mongodb-centos-*",
+    ]
+  }
 
-    owners = ["${data.aws_caller_identity.current.account_id}"] 
+  filter {
+    name = "virtualization-type"
+
+    values = [
+      "hvm",
+    ]
+  }
+
+  owners = [
+    "${data.aws_caller_identity.current.account_id}",
+  ]
 }
