@@ -169,27 +169,27 @@ if __name__ == '__main__':
 		"key": "{}/terraform.tfstate".format(tf_aws_config["project_name"]),
 		"region": tf_aws_config["tf_region"],
 	}
-	# 	aws_runner = TFRunner(AWS_TERRAFORM_DIR, tf_aws_config)
+	aws_runner = TFRunner(TERRAFORM_DIR["AWS"], tf_aws_config)
+	
+	# print("Initializing AWS")
+	# aws_runner.init(tf_aws_init_config)
 	#
-	# 	print("Initializing AWS")
-	# 	out, err = aws_runner.init(tf_aws_init_config)
+	# print("Planning AWS")
+	# aws_runner.plan()
 	#
-	# 	print("Planning AWS")
-	# 	aws_runner.plan()
+	# print("Applying AWS")
+	# aws_runner.apply()
 	#
-	# 	print("Applying AWS")
-	# 	aws_runner.apply()
+	# bucket_name = "{}-{}".format(tf_s3_config['customer'], tf_s3_config['terraform_bucket_name'])
+	# config = {
+	# 	"aws_region": tf_s3_config["aws_region"]
+	# }
+	# print check_if_bucket_exists(bucket_name, config)
 	#
-	# 	# bucket_name = "{}-{}".format(tf_s3_config['customer'], tf_s3_config['terraform_bucket_name'])
-	# 	# config = {
-	# 	# 	"aws_region": tf_s3_config["aws_region"]
-	# 	# }
-	# 	# print check_if_bucket_exists(bucket_name, config)
+	print("Destroying AWS")
+	out, err = aws_runner.destroy()
 	#
-	# 	print("Destroying AWS")
-	# 	aws_runner.destroy()
-	#
-	print("Destroying S3")
-	s3_runner.destroy()
+	# print("Destroying S3")
+	# s3_runner.destroy()
 	
 	print("Finished")

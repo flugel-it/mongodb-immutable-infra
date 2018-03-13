@@ -21,5 +21,5 @@ CONFIG_TEMPLATE = {
 
 try:
 	from test_config_local import *
-finally:
+except ImportError:
 	pass
