@@ -4,7 +4,7 @@ Feature: Create MongoDB image
 	@mongodb_tf
 	@mongodb_image_tf
 	Scenario: Create Ubuntu image
- # Enter steps here
+
 
 	@mongodb_tf
 	@mongodb_image_tf

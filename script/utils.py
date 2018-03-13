@@ -142,6 +142,12 @@ def check_if_bucket_exists(bucket_name, cfg=None):
 	return result
 
 
+def check_if_vpc_exists(region, name):
+	ec2 = boto3.resource('ec2', region_name=region)
+	vpc_filters = [{'Name': 'tag:Name', 'Values': [name]}]
+	return len(list(ec2.vpcs.filter(Filters=vpc_filters))) > 0
+
+
 if __name__ == '__main__':
 	tf_s3_config = {
 		"customer": "flugel-test",
@@ -150,11 +156,11 @@ if __name__ == '__main__':
 	}
 	s3_runner = TFRunner(TERRAFORM_DIR["S3"], tf_s3_config)
 	
-	print("Planning S3")
-	s3_runner.plan()
-	
-	print("Applying S3")
-	s3_runner.apply()
+	# print("Planning S3")
+	# out, err = s3_runner.plan()
+	#
+	# print("Applying S3")
+	# out, err = s3_runner.apply()
 	
 	tf_aws_config = {
 		"customer": tf_s3_config["customer"],
@@ -171,25 +177,34 @@ if __name__ == '__main__':
 	}
 	aws_runner = TFRunner(TERRAFORM_DIR["AWS"], tf_aws_config)
 	
-	print("Initializing AWS")
-	aws_runner.init(tf_aws_init_config)
-	
-	print("Planning AWS")
-	aws_runner.plan()
-	
-	print("Applying AWS")
-	aws_runner.apply()
-	
-	bucket_name = "{}-{}".format(tf_s3_config['customer'], tf_s3_config['terraform_bucket_name'])
-	config = {
-		"aws_region": tf_s3_config["aws_region"]
-	}
+	# print("Initializing AWS")
+	# aws_runner.init(tf_aws_init_config)
+	#
+	# print("Planning AWS")
+	# out, err = aws_runner.plan()
+	#
+	# print("Applying AWS")
+	# out, err = aws_runner.apply()
 
-	print("Destroying AWS")
-	out, err = aws_runner.destroy()
 	# print(out)
 	# print(err)
-	print("Destroying S3")
-	s3_runner.destroy()
+	
+	# vpc_exists = check_if_vpc_exists(tf_aws_config['aws_region'], tf_aws_config['namespace'])
+	# if vpc_exists:
+	# 	print("VPC {} exists".format(tf_aws_config['namespace']))
+	# else:
+	# 	print("VPC {} doesn't exist".format(tf_aws_config['namespace']))
+	
+	# print("Destroying AWS")
+	# out, err = aws_runner.destroy()
+	
+	# vpc_exists = check_if_vpc_exists(tf_aws_config['aws_region'], tf_aws_config['namespace'])
+	# if vpc_exists:
+	# 	print("VPC {} exists".format(tf_aws_config['namespace']))
+	# else:
+	# 	print("VPC {} doesn't exist".format(tf_aws_config['namespace']))
+	
+	# print("Destroying S3")
+	# s3_runner.destroy()
 	
 	print("Finished")
