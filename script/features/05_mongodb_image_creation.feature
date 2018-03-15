@@ -3,9 +3,14 @@ Feature: Create MongoDB image
 
 	@mongodb_tf
 	@mongodb_image_tf
-	Scenario: Create Ubuntu image
+	Scenario Outline: Create images
+		Given packer region is eu-west-2
+		And packer AMI name is mongodb-<distribution>-test
+		When validated <distribution> image
+		When built <distribution> image
+		Then image was created successfully
 
-
-	@mongodb_tf
-	@mongodb_image_tf
-	Scenario: Create Centos image
+		Examples:
+			| distribution |
+			| ubuntu       |
+#			| centos       | # works well, commented out to wait less

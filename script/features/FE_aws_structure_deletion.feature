@@ -2,7 +2,6 @@ Feature: Deleting AWS structure used for MongoDB
  # Enter feature description here
 
 	@mongodb_tf
-	@mongodb_image_tf
 	@aws_structure_tf
 	Scenario: Delete AWS structure for MongoDB
 		Given customer name for AWS is flugel-test

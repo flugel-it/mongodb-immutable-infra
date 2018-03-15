@@ -4,7 +4,7 @@ import subprocess
 import boto3
 from botocore.exceptions import ClientError
 
-from test_config import TERRAFORM_DIR
+from test_config import TERRAFORM_DIR, PACKER_DIR, PACKER_CONFIG_FILES
 
 
 def run_cmd(cmd, env=None):
@@ -114,7 +114,66 @@ class TFRunner(object):
 		return self.__run_command(command)
 
 
-def check_if_bucket_exists(bucket_name, cfg=None):
+class PackerRunner(object):
+	def __init__(self, config_dir, config_file, variables=None):
+		"""
+		:type config_dir: str
+		:param config_dir:
+		:type config_file: str
+		:param config_file:
+		:type variables: dict
+		:param variables:
+		"""
+		self.variables = variables
+		self.config_dir = config_dir
+		self.config_file = config_file
+	
+	def __run_command(self, command):
+		"""
+		This function runs a terraform command with appropriate
+		environmental variables and in a valid directory
+
+		:type command: str
+		:param command: command to be executed
+
+		:return:
+		"""
+		options = ""
+		if self.variables is not None:
+			options = " ".join(map(
+				lambda key: "-var '{}={}'".format(key, self.variables[key]),
+				self.variables
+			))
+		
+		command += " " + options + " " + self.config_file
+		
+		working_dir = os.getcwd()
+		os.chdir(self.config_dir)
+		
+		out, err = run_cmd(command)
+		
+		os.chdir(working_dir)
+		return out, err
+	
+	def validate(self):
+		command = "packer validate"
+		return self.__run_command(command)
+	
+	def build(self, force=False):
+		command = "packer build"
+		if force:
+			command += " -force"
+		return self.__run_command(command)
+	
+	def delete(self):
+		result = delete_image_if_exists(self.variables["ami_name"], self.variables["region"])
+		error = None
+		if not result:
+			error = "Failed to delete the image"
+		return result, error
+
+
+def bucket_exists(bucket_name, cfg=None):
 	"""
 	Checks if the bucket with current name exists
 	
@@ -142,10 +201,59 @@ def check_if_bucket_exists(bucket_name, cfg=None):
 	return result
 
 
-def check_if_vpc_exists(region, name):
+def vpc_exists(region, name):
+	"""
+	:type region: str
+	:param region:
+	:type name: str
+	:param name:
+	:return:
+	"""
 	ec2 = boto3.resource('ec2', region_name=region)
 	vpc_filters = [{'Name': 'tag:Name', 'Values': [name]}]
 	return len(list(ec2.vpcs.filter(Filters=vpc_filters))) > 0
+
+
+def get_images(name, region):
+	"""
+	:type name: str
+	:param name:
+	:type region: str
+	:param region:
+	:return:
+	"""
+	ec2 = boto3.resource('ec2', region_name=region)
+	image_filters = [{'Name': 'name', 'Values': [name + "-*"]}]
+	images = ec2.images.filter(Filters=image_filters)
+	return list(images)
+
+
+def image_exists(name, region):
+	"""
+	:type name: str
+	:param name:
+	:type region: str
+	:param region:
+	:return:
+	"""
+	images = get_images(name, region)
+	return len(images) > 0
+
+
+def delete_image_if_exists(name, region):
+	"""
+	:type name: str
+	:param name:
+	:type region: str
+	:param region:
+	:return:
+	"""
+	images = get_images(name, region)
+	if len(images) > 0:
+		images[-1].deregister()
+		return True
+	else:
+		return False
 
 
 if __name__ == '__main__':
@@ -185,7 +293,7 @@ if __name__ == '__main__':
 	#
 	# print("Applying AWS")
 	# out, err = aws_runner.apply()
-
+	
 	# print(out)
 	# print(err)
 	
@@ -206,5 +314,22 @@ if __name__ == '__main__':
 	
 	# print("Destroying S3")
 	# s3_runner.destroy()
+	
+	packer_ubuntu_config = {
+		"region": tf_aws_config["aws_region"],
+		"ami_name": "mongodb-ubuntu-test"
+	}
+	packer_ubuntu_runner = PackerRunner(PACKER_DIR, PACKER_CONFIG_FILES["ubuntu"], packer_ubuntu_config)
+	
+	# print("Validating Ubuntu image")
+	# out, err = packer_ubuntu_runner.validate()
+	
+	print("Building Ubuntu image")
+	out, err = packer_ubuntu_runner.build(force=True)
+	
+	print("Deleting Ubuntu image")
+	out, err = packer_ubuntu_runner.delete()
+	print(out)
+	print(err)
 	
 	print("Finished")

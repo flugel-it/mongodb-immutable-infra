@@ -7,6 +7,12 @@ TERRAFORM_DIR = {
 	"MongoDB": "../mongodb/terraform/"
 }
 
+PACKER_DIR = "../mongodb/packer/"
+PACKER_CONFIG_FILES = {
+	"ubuntu": "mongodb-ubuntu.json",
+	"centos": "mongodb-centos.json",
+}
+
 RUNNER_TEMPLATE = {
 	"S3": None,
 	"AWS": None,
@@ -19,6 +25,7 @@ CONFIG_TEMPLATE = {
 	"MongoDB": {},
 }
 
+# override existing variables in test_config_local if needed
 try:
 	from test_config_local import *
 except ImportError:

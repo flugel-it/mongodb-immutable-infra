@@ -39,15 +39,15 @@
 		},
 		{
 			"type": "file",
-			"source": "../../script/join-mongo-cluster.py",
-			"destination": "/tmp/join-mongo-cluster.py"
+			"source": "../../script/join_mongo_cluster.py",
+			"destination": "/tmp/join_mongo_cluster.py"
 		},
 		{
 			"type": "shell",
 			"inline": [
-				"sudo cp /tmp/join-mongo-cluster.py /usr/local/sbin/join-mongo-cluster.py",
-				"sudo chown root:root /usr/local/sbin/join-mongo-cluster.py",
-				"sudo chmod +x /usr/local/sbin/join-mongo-cluster.py"
+				"sudo cp /tmp/join_mongo_cluster.py /usr/local/sbin/join_mongo_cluster.py",
+				"sudo chown root:root /usr/local/sbin/join_mongo_cluster.py",
+				"sudo chmod +x /usr/local/sbin/join_mongo_cluster.py"
 			]
 		},
 		{
