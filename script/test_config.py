@@ -25,6 +25,8 @@ CONFIG_TEMPLATE = {
 	"MongoDB": {},
 }
 
+IMAGE_DELETE_TIMEOUT = 180
+
 # override existing variables in test_config_local if needed
 try:
 	from test_config_local import *

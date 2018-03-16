@@ -220,12 +220,13 @@ def get_images(name, region):
 	:param name:
 	:type region: str
 	:param region:
+	:rtype: list
 	:return:
 	"""
 	ec2 = boto3.resource('ec2', region_name=region)
 	image_filters = [{'Name': 'name', 'Values': [name + "-*"]}]
 	images = ec2.images.filter(Filters=image_filters)
-	return list(images)
+	return images
 
 
 def image_exists(name, region):
@@ -236,7 +237,7 @@ def image_exists(name, region):
 	:param region:
 	:return:
 	"""
-	images = get_images(name, region)
+	images = list(get_images(name, region))
 	return len(images) > 0
 
 
@@ -248,7 +249,7 @@ def delete_image_if_exists(name, region):
 	:param region:
 	:return:
 	"""
-	images = get_images(name, region)
+	images = list(get_images(name, region))
 	if len(images) > 0:
 		images[-1].deregister()
 		return True

@@ -13,4 +13,4 @@ Feature: Create MongoDB image
 		Examples:
 			| distribution |
 			| ubuntu       |
-#			| centos       | # works well, commented out to wait less
+			| centos       |

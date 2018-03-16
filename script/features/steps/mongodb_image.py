@@ -1,6 +1,8 @@
+from time import sleep
+
 from lettuce import step, world
 
-from test_config import PACKER_DIR, PACKER_CONFIG_FILES
+from test_config import PACKER_DIR, PACKER_CONFIG_FILES, IMAGE_DELETE_TIMEOUT
 from utils import image_exists, PackerRunner
 
 
@@ -40,3 +42,8 @@ def check_image(step_instance, stage):
 		exists = not image_exists(world.ami_name, world.region)
 	
 	assert exists, "Image wasn't {} successfully".format(stage)
+
+
+@step("waited until the image is deleted")
+def step_impl(step_instance):
+	sleep(IMAGE_DELETE_TIMEOUT)

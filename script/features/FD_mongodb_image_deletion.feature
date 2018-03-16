@@ -7,10 +7,10 @@ Feature: Delete MongoDB image
 		Given packer region is eu-west-2
 		And packer AMI name is mongodb-<distribution>-test
 		When deleted <distribution> image
- #		Then image was deleted successfully
- #		FIXME: This check is not working
+		And waited until the image is deleted
+		Then image was deleted successfully
 
 		Examples:
 			| distribution |
 			| ubuntu       |
-#			| centos       | # works well, commented out to wait less
+			| centos       |
