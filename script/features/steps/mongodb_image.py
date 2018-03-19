@@ -45,5 +45,5 @@ def check_image(step_instance, stage):
 
 
 @step("waited until the image is deleted")
-def step_impl(step_instance):
+def wait_for_deletion(step_instance):
 	sleep(IMAGE_DELETE_TIMEOUT)

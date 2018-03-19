@@ -325,12 +325,13 @@ if __name__ == '__main__':
 	# print("Validating Ubuntu image")
 	# out, err = packer_ubuntu_runner.validate()
 	
-	print("Building Ubuntu image")
-	out, err = packer_ubuntu_runner.build(force=True)
+	# print("Building Ubuntu image")
+	# out, err = packer_ubuntu_runner.build(force=True)
 	
-	print("Deleting Ubuntu image")
-	out, err = packer_ubuntu_runner.delete()
-	print(out)
-	print(err)
+	# print("Deleting Ubuntu image")
+	# out, err = packer_ubuntu_runner.delete()
+	
+	# print(out)
+	# print(err)
 	
 	print("Finished")
