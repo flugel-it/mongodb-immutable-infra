@@ -1,6 +1,7 @@
 Feature: Create MongoDB image
  # Enter feature description here
 
+	@create
 	@mongodb_tf
 	@mongodb_image_tf
 	Scenario Outline: Create images

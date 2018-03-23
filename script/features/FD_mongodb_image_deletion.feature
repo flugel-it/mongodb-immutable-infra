@@ -1,6 +1,7 @@
 Feature: Delete MongoDB image
  # Enter feature description here
 
+	@delete
 	@mongodb_tf
 	@mongodb_image_tf
 	Scenario Outline: Delete images

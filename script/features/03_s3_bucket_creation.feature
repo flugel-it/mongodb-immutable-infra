@@ -1,5 +1,6 @@
 Feature: Creating S3 bucket for terraform state configuration
 
+	@create
 	@mongodb_tf
 	@aws_structure_tf
 	@s3_tf

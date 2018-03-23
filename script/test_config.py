@@ -26,6 +26,7 @@ CONFIG_TEMPLATE = {
 }
 
 IMAGE_DELETE_TIMEOUT = 180
+CLUSTER_CREATION_TIMEOUT = 30
 
 # override existing variables in test_config_local if needed
 try:

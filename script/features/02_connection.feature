@@ -11,4 +11,4 @@ Feature: Test Connection
 			| host       | connected |
 			| localhost  | is        |
 			| google.com | is        |
-#			| non-existing.website.com | is not    |
+			| non-existing.website.com | is not    |

@@ -3,11 +3,10 @@ import platform
 import sys
 from time import sleep
 
-import boto3
 import requests
 from pymongo import MongoClient
 
-from utils import run_cmd
+from utils import run_cmd, get_instances
 
 
 def get_region():
@@ -15,35 +14,12 @@ def get_region():
 	Works only if the current computer is aws ec2 instance
 	
 	:return: region of the current aws ec2 instance (example: "eu-central-1")
+	:rtype: str
 	"""
 	doc_url = "http://169.254.169.254/latest/dynamic/instance-identity/document"
 	res = requests.get(doc_url)
 	reg = res.json()["region"]
 	return reg
-
-
-def get_instances(cluster_name, region_name=None):
-	"""
-	Gets all instances from the cluster in the same region as current instance
-	
-	:param region_name: the name of a region in which to search
-	:param cluster_name: the name of cluster to get data from
-	:return: list with instance data
-	"""
-	if region_name is None:
-		region_name = get_region()
-	ec2 = boto3.client('ec2', region_name=region_name)
-	instances = ec2.describe_instances(Filters=[
-		{
-			'Name': 'tag:cluster',
-			'Values': [cluster_name]
-		},
-		{
-			'Name': 'instance-state-name',
-			'Values': ['running']
-		}
-	]).get("Reservations")
-	return instances
 
 
 class Config:
@@ -90,7 +66,7 @@ def main():
 		return
 	cluster_name = sys.argv[1]
 	
-	instances = get_instances(cluster_name)
+	instances = get_instances(get_region(), cluster_name=cluster_name)
 	
 	conf = Config()
 	conf.write_conf(cluster_name)

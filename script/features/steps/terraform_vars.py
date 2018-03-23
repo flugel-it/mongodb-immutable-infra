@@ -37,13 +37,38 @@ def get_customer_name(step_instance, namespace, path):
 
 @step("terraform region for (S3|AWS|MongoDb) is ([a-z]{2}-[a-z]+-[1-9])")
 def get_aws_region(step_instance, namespace, aws_region):
-	world.tf_region = aws_region
+	world.tf_configs['tf_region'] = aws_region
+
+
+@step("key name for MongoDB is ([A-Za-z0-9\-_]*)")
+def ssh_key_name(step_instance, key_name):
+	world.tf_configs['key_name'] = key_name
+
+
+@step("cluster name for MongoDB is ([A-Za-z0-9\-_]*)")
+def cluster_name_is(step_instance, cluster_name):
+	world.tf_configs['cluster_name'] = cluster_name
+
+
+@step("domain name for MongoDB is (.*)")
+def domain_name(step_instance, domain):
+	world.tf_configs['dns_domain'] = domain
+
+
+@step("Linux distribution for MongoDB is (ubuntu|centos)")
+def linux_distribution(step_instance, os_env):
+	world.tf_configs['os_env'] = os_env
+
+
+@step("number of instances in cluster for MongoDB is (\d+)")
+def number_of_instances(step_instance, instance_count):
+	world.tf_configs['instance_count'] = instance_count
 
 
 @step("terraform backend is set to S3 bucket")
-def step_impl(step_instance):
+def setup_tf_backend(step_instance):
 	world.tf_init_configs = {
 		"bucket": "{}-{}".format(world.tf_configs['customer'], world.tf_configs['terraform_bucket_name']),
 		"key": "{}/terraform.tfstate".format(world.tf_configs["project_name"]),
-		"region": world.tf_region,
+		"region": world.tf_configs['tf_region'],
 	}

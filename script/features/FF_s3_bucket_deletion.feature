@@ -1,5 +1,6 @@
 Feature: Deleting S3 bucket for terraform state configuration
 
+	@delete
 	@mongodb_tf
 	@aws_structure_tf
 	@s3_tf
