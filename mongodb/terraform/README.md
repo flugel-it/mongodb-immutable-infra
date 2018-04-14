@@ -42,3 +42,5 @@ terraform apply
 ```
 
 **Note**: to use route53 and domain registration, you need to either create a new dns domain using route53, or request the client(if applicable) to give a role/user access to their own aws dns domains.
+
+**Note2**: in file terraform.tfvars, you need to replace the variable key_name with the name of you aws key.
