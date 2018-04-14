@@ -11,5 +11,5 @@ data "aws_ami" "mongodb-ubuntu" {
         values = ["hvm"]
     }
 
-    owners = ["${data.aws_caller_identity.current.account_id}"]
+    owners = ["${var.image_owner}"]
 }
