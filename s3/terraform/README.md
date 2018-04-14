@@ -9,7 +9,7 @@ export TF_VAR_customer="flugel"
 export TF_VAR_aws_region="us-west-2"
 ```
 
-**Note**: The bucket Name must be worlwide unique, please be aware of this.
+**Note**: The bucket Name must be worlwide unique, please be aware of this. in case you need to change the bucket name, please go to **terraform.tfvars** and change bucket name variable.
 
 > - **TF_VAR_customer**: The customer/client name
 > - **TF_VAR_aws_region**: AWS region where the bucket will be created
