@@ -24,7 +24,7 @@ Once these variables exported, you can init terraform:
 ```
 terraform init \
     -backend-config="bucket=${TF_VAR_customer}-terraform-state" \
-    -backend-config="key=${TF_VAR_project_name}/terraform.tfstate" \
+    -backend-config="key=${TF_VAR_project_name}-terraform.tfstate" \
     -backend-config="region=${TF_VAR_tf_region}"
 
 ```
