@@ -10,6 +10,11 @@ export TF_VAR_project_name="mongodb-cluster"
 export TF_VAR_tf_region="us-west-2"
 export TF_VAR_aws_region="us-west-2"
 export TF_VAR_namespace="Cluster_Automation"
+export TF_VAR_dns_domain="flugel-it.com"
+export TF_VAR_os_env="centos"
+export TF_VAR_cluster_name="mongocluster"
+export TF_VAR_key_name="Cluster_Automation"
+export TF_VAR_instance_count="3"
 ```
 
 > - **TF_VAR_customer**: The customer/client name

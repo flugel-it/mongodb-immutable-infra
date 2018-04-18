@@ -1,15 +1,23 @@
 data "aws_ami" "mongodb-ubuntu" {
-    most_recent = true
+  most_recent = true
 
-    filter {
-        name   = "name"
-        values = ["mongodb-ubuntu-*"]
-    }
+  filter {
+    name = "name"
 
-    filter {
-        name   = "virtualization-type"
-        values = ["hvm"]
-    }
+    values = [
+      "mongodb-ubuntu-*",
+    ]
+  }
 
-    owners = ["${var.image_owner}"]
+  filter {
+    name = "virtualization-type"
+
+    values = [
+      "hvm",
+    ]
+  }
+
+  owners = [
+    "${data.aws_caller_identity.current.account_id}",
+  ]
 }
