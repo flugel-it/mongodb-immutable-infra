@@ -1,3 +1,11 @@
+# Prerequesites
+
+- Stable Terraform Installation
+- S3 Bucket Created
+- Your own AWS key-pair (.pem File)
+
+
+
 # Building a base infrastructure
 
 The cluster run in a separated vpc/subnet. 
@@ -18,13 +26,20 @@ export TF_VAR_namespace="Cluster_Automation"
 > - **TF_VAR_aws_region**: AWS region where the new vpc will be created
 > - **TF_VAR_namespace**: Namespace of the project
 
+**NOTE**: You must to generate a public key of the AWS key and inform the path in terraform.tfvars file. To generate the public key:
+
+```
+ssh-keygen -y -f private_key.pem > public_key.pub
+```
+
 Once these variables exported, you can init terraform:
 
-
+Edited By Eduardo Martinez.
+In order to run properly the terraform init code, you need to change this / for any other character in the key config line, like - or _
 ```
 terraform init \
     -backend-config="bucket=${TF_VAR_customer}-terraform-state" \
-    -backend-config="key=${TF_VAR_project_name}/terraform.tfstate" \
+    -backend-config="key=${TF_VAR_project_name}-terraform.tfstate" \
     -backend-config="region=${TF_VAR_tf_region}"
 
 ```
@@ -39,10 +54,4 @@ And apply the changes:
 
 ```
 terraform apply
-```
-
-**NOTE**: You must to generate a public key of the AWS key and inform the path in terraform.tfvars file. To generate the public key:
-
-```
-ssh-keygen -y -f private_key.pem > public_key.pub
 ```

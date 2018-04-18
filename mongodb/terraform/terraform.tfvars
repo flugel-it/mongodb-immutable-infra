@@ -11,4 +11,4 @@ os_env = "centos"
 # Name of the mongodb cluster
 cluster_name = "mongocluster"
 # SSH Key name created previously
-key_name = "Cluster_Automation"
+key_name = "YOUR_KEY"

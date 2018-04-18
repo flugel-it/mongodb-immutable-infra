@@ -10,7 +10,7 @@ variable "vpc_cidr_block" {
 
 variable "cidr_blocks" {
   description = "The CIDR blocks to create the workstations in."
-  type = "list"
+  type        = "list"
 }
 
 variable "public_key_path" {}

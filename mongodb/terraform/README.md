@@ -10,6 +10,11 @@ export TF_VAR_project_name="mongodb-cluster"
 export TF_VAR_tf_region="us-west-2"
 export TF_VAR_aws_region="us-west-2"
 export TF_VAR_namespace="Cluster_Automation"
+export TF_VAR_dns_domain="flugel-it.com"
+export TF_VAR_os_env="centos"
+export TF_VAR_cluster_name="mongocluster"
+export TF_VAR_key_name="Cluster_Automation"
+export TF_VAR_instance_count="3"
 ```
 
 > - **TF_VAR_customer**: The customer/client name
@@ -24,7 +29,7 @@ Once these variables exported, you can init terraform:
 ```
 terraform init \
     -backend-config="bucket=${TF_VAR_customer}-terraform-state" \
-    -backend-config="key=${TF_VAR_project_name}/terraform.tfstate" \
+    -backend-config="key=${TF_VAR_project_name}-terraform.tfstate" \
     -backend-config="region=${TF_VAR_tf_region}"
 
 ```
@@ -41,3 +46,6 @@ And apply the changes:
 terraform apply
 ```
 
+**Note**: to use route53 and domain registration, you need to either create a new dns domain using route53, or request the client(if applicable) to give a role/user access to their own aws dns domains.
+
+**Note2**: in file terraform.tfvars, you need to replace the variable key_name with the name of you aws key.
