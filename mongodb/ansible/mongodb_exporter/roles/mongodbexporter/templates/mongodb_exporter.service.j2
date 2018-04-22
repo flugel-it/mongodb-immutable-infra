@@ -1,0 +1,11 @@
+[Unit]
+Description= Mongodb_exporter service
+After=network.target
+
+[Service]
+Type=simple
+
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+
+ExecStart={{ prometheus_install_path }}/mongodb_exporter -mongodb.uri={{ mongodb_exporter_mongodb_uri }}

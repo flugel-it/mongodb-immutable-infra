@@ -54,6 +54,14 @@
             "type": "ansible",
             "playbook_file": "../ansible/mongodb-ubuntu/playbook.yml",
             "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False" ]
-        }
+        },
+	{
+       		"type": "ansible",
+		"playbook_file": "../ansible/node_exporter/playbook.yml"
+	},
+	{
+       		"type": "ansible",
+		"playbook_file": "../ansible/mongodb_exporter/playbook.yml"
+	}
     ]
 }

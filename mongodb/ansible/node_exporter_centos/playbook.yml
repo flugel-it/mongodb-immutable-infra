@@ -1,0 +1,58 @@
+---
+- hosts: all
+  remote_user: centos
+  gather_facts: true
+  become_user: root
+  become: true
+  vars:
+    node_exporter_version: 0.15.2
+  tasks:
+    - name: test connection
+      ping:
+    - name: create group
+      group:
+        name: prometheus
+        state: present
+    - name: create user
+      user:
+        name: prometheus
+        group: prometheus
+        createhome: no
+        shell: /sbin/nologin
+        state: present
+    - name: create opt directory for prometheus 
+      file: 
+        path: /opt/prometheus 
+        state: directory
+    - name: download node exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+        dest: /opt/prometheus
+    - name: unarchive node exporter
+      unarchive:
+        remote_src: yes
+        src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+        dest: /opt/prometheus
+    - name: soft link to node exporter
+      file:
+        path: /usr/bin/node_exporter
+        state: link
+        src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+    - name: install unit file to systemd
+      template:
+        src: node_exporter.service
+        dest: /etc/systemd/system/node_exporter.service
+    - name: configure systemd to use service
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        state: started
+        name: node_exporter.service
+    - name: Check port is listenting node_exporter
+      wait_for:
+       host: all
+       port: 9100
+       state: started         
+       delay: 10               
+       timeout: 3          
+      ignore_errors: yes

@@ -1,0 +1,11 @@
+---
+- name: chech mongodb_exporter port is accesible
+  wait_for:
+    host: all
+    port: "{{ item }}"
+    state: started
+    delay: 0
+    timeout: 3
+  ignore_errors: yes
+  with_items:
+    - 9216

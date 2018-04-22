@@ -1,0 +1,58 @@
+- name: set role variables, if necessary
+  include: set-role-variables.yml
+
+
+- name: install libselinux-python binary for Ansible to work
+  yum: name=libselinux-python state=present
+  when: ansible_pkg_mgr == "yum"
+
+- name: install dependencies for compiling Prometheus source code
+  include: install-compile-tools.yml
+
+
+- name: mkdir for general cases
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ prometheus_install_path }}"
+    - "{{ prometheus_log_path }}"
+    - "{{ prometheus_pid_path }}"
+
+
+- name: build mongodb_exporter source code
+  command: go get -u github.com/percona/mongodb_exporter
+  args:
+    creates: "{{ prometheus_gopath }}/bin/mongodb_exporter"
+  environment:
+    GO15VENDOREXPERIMENT: 1
+    GOROOT: "{{ prometheus_goroot }}"
+    GOPATH: "{{ prometheus_gopath }}"
+    PATH: "{{ ansible_env.PATH }}:{{ prometheus_goroot }}/bin:{{ prometheus_gopath }}/bin"
+
+- name: copy the built mongodb_exporter to the install path
+  command: "cp  {{ prometheus_gopath }}/bin/mongodb_exporter  {{ prometheus_install_path }}"
+  args:
+    creates: "{{ prometheus_install_path }}/mongodb_exporter"
+
+
+- name: set prometheus variables
+  copy: src="../files/etc-default-mongodb_exporter"  dest=/etc/default/mongodb_exporter
+
+- name: copy INIT script to server
+  template: src="../templates/mongodb_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/mongodb_exporter"  mode="a+x"
+  notify:
+    - restart mongodb_exporter
+  when: not mongodb_exporter_use_systemd|bool
+
+
+- name: copy systemd config to server
+  template: src="../templates/mongodb_exporter.service.j2"  dest="/lib/systemd/system/mongodb_exporter.service"
+  when: mongodb_exporter_use_systemd
+
+
+- name: set INIT status
+  service: name=mongodb_exporter enabled=yes
