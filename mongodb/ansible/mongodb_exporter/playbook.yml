@@ -1,0 +1,9 @@
+---
+- name: Mongodb_exporter
+  hosts: all
+  remote_user: ubuntu
+  gather_facts: true
+  become_user: root
+  become: true
+  roles:
+    - mongodbexporter

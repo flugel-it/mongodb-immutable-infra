@@ -1,60 +1,66 @@
 {
-	"variables": {
-		"aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
-		"aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}"
+    },
+    "builders": [
+        {
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "ami_name": "{{user `ami_name`}}-{{timestamp}}",
+            "instance_type": "t2.micro",
+            "region": "{{user `region`}}",
+            "source_ami_filter": {
+              "filters": {
+              "product-code": "aw0evgkw8e5c1q413zgy5pjce"
+              },
+              "owners": ["aws-marketplace"],
+              "most_recent": true
+            },
+            "ssh_username": "centos",
+            "type": "amazon-ebs"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline":
+            [
+                "sleep 30",
+                "sudo yum -y update",
+                "sudo yum -y install epel-release",
+                "sudo yum -y update",
+                "sudo yum -y install gcc python-devel python-pip python-wheel",
+                "sudo pip install --upgrade pip",
+                "sudo pip install boto3 pymongo"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "../../script/join-mongo-cluster.py",
+            "destination": "/tmp/join-mongo-cluster.py"
+        },
+        {
+            "type": "shell",
+            "inline":
+            [
+                "sudo cp /tmp/join-mongo-cluster.py /usr/local/sbin/join-mongo-cluster.py",
+                "sudo chown root:root /usr/local/sbin/join-mongo-cluster.py",
+                "sudo chmod +x /usr/local/sbin/join-mongo-cluster.py"
+            ]
+        },
+        {
+            "type": "ansible",
+            "playbook_file": "../ansible/mongodb-centos/playbook.yml",
+            "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False" ]
+        },
+	{
+       		"type": "ansible",
+		"playbook_file": "../ansible/node_exporter_centos/playbook.yml"
 	},
-	"builders": [
-		{
-			"access_key": "{{user `aws_access_key`}}",
-			"secret_key": "{{user `aws_secret_key`}}",
-			"ami_name": "{{user `ami_name`}}-{{timestamp}}",
-			"instance_type": "t2.micro",
-			"region": "{{user `region`}}",
-			"source_ami_filter": {
-				"filters": {
-					"product-code": "aw0evgkw8e5c1q413zgy5pjce"
-				},
-				"owners": [
-					"aws-marketplace"
-				],
-				"most_recent": true
-			},
-			"ssh_username": "centos",
-			"type": "amazon-ebs"
-		}
-	],
-	"provisioners": [
-		{
-			"type": "shell",
-			"inline": [
-				"sleep 30",
-				"sudo yum -y update",
-				"sudo yum -y install epel-release",
-				"sudo yum -y update",
-				"sudo yum -y install gcc python-devel python-pip python-wheel",
-				"sudo pip install --upgrade pip",
-				"sudo pip install boto3 pymongo"
-			]
-		},
-		{
-			"type": "file",
-			"source": "../../script/join_mongo_cluster.py",
-			"destination": "/tmp/join_mongo_cluster.py"
-		},
-		{
-			"type": "shell",
-			"inline": [
-				"sudo cp /tmp/join_mongo_cluster.py /usr/local/sbin/join_mongo_cluster.py",
-				"sudo chown root:root /usr/local/sbin/join_mongo_cluster.py",
-				"sudo chmod +x /usr/local/sbin/join_mongo_cluster.py"
-			]
-		},
-		{
-			"type": "ansible",
-			"playbook_file": "../ansible/mongodb-centos/playbook.yml",
-			"ansible_env_vars": [
-				"ANSIBLE_HOST_KEY_CHECKING=False"
-			]
-		}
-	]
+	{
+       		"type": "ansible",
+		"playbook_file": "../ansible/mongodb_exporter/playbook.yml"
+	}
+    ]
 }
