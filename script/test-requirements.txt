@@ -29,4 +29,4 @@ sure==1.4.7
 testtools==2.3.0
 traceback2==1.4.0
 unittest2==1.1.0
-urllib3==1.24.2
+urllib3==1.26.5
